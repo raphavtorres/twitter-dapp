@@ -1,80 +1,76 @@
-import { Web3AuthCore } from "@web3auth/core";
+import { Web3Auth } from "@web3auth/modal";
+import { CHAIN_NAMESPACES, WEB3AUTH_NETWORK } from "@web3auth/base";
+import type { CustomChainConfig } from "@web3auth/base/dist/types/chain/IChainInterface";
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+import { OpenloginAdapter, THEME_MODES } from "@web3auth/openlogin-adapter";
+import { MetamaskAdapter } from "@web3auth/metamask-adapter";
 
-import { CHAIN_NAMESPACES } from "@web3auth/base";
+const SEPOLIA_RPC_TARGET = process.env.SEPOLIA_RPC_TARGET;
+const SEPOLIA_CHAIN_ID = process.env.SEPOLIA_CHAIN_ID;
+const SEPOLIA_BLOCK_EXPLORER = process.env.SEPOLIA_BLOCK_EXPLORER;
+const WEB3AUTH_CLIENT_ID = process.env.WEB3AUTH_CLIENT_ID;
+const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID;
 
-import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
-
-const clientId = "client id from the web3auth dashboard plug n play project";
-
-const web3auth = new Web3AuthCore({
-	chainConfig: {
+const web3auth = async function () {
+	// Instantiating the Web3Auth SDK
+	const chainConfig: CustomChainConfig = {
 		chainNamespace: CHAIN_NAMESPACES.EIP155,
+		chainId: SEPOLIA_CHAIN_ID!,
+		rpcTarget: SEPOLIA_RPC_TARGET!,
+		displayName: "Sepolia Twitter DApp",
+		blockExplorerUrl: SEPOLIA_BLOCK_EXPLORER!,
+		ticker: "SepoliaETH",
+		tickerName: "Ethereum",
+		logo: "https://images.toruswallet.io/eth.svg",
+	};
 
-		chainId: "0x13881",
+	const clientId = WEB3AUTH_CLIENT_ID!;
 
-		rpcTarget:
-			"https://sleek-rough-uranium.matic-testnet.discover.quiknode.pro/c7c16b97e7b45a469878ee260ad13a130010e26d/",
-	},
-});
+	const privateKeyProvider = new EthereumPrivateKeyProvider({
+		config: { chainConfig },
+	});
 
-const openloginAdapter = new OpenloginAdapter({
-	adapterSettings: {
+	const web3auth = new Web3Auth({
 		clientId,
+		web3AuthNetwork: WEB3AUTH_NETWORK.TESTNET,
+		privateKeyProvider,
+	});
 
-		network: "testnet",
-
-		uxMode: "popup",
-
-		whiteLabel: {
-			name: "Twitter DApp",
-
-			logoLight: "<hosted_logo_image_link>",
-
-			logoDark: "<hosted_logo_image_link>",
-
-			defaultLanguage: "en",
-
-			dark: true, // whether to enable dark mode. defaultValue: false
-		},
-
-		loginConfig: {
-			// Add login configs corresponding to the providers on modal
-
-			// Twitter login
-
-			jwt: {
-				name: "Custom Auth Login",
-
-				Verifier: "<client_verifier_from_Auth0_dashboard>", // Please create a verifier on the developer dashboard and pass the name here
-
-				typeOfLogin: "twitter", // Pass on the login provider of the verifier you've created
-
-				clientId: "<clientId_from_Auth_0_dashboard>", // Pass on the clientId of the login provider here - Please note this differs from the Web3Auth ClientID. This is the JWT Client ID
+	// Initializing the Openlogin Adapter
+	const openloginAdapter = new OpenloginAdapter({
+		adapterSettings: {
+			clientId: WEB3AUTH_CLIENT_ID,
+			uxMode: "popup",
+			whiteLabel: {
+				appName: "Twitter DApp",
+				logoLight: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+				logoDark: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+				mode: THEME_MODES.dark,
+				defaultLanguage: "en",
+			},
+			loginConfig: {
+				jwt: {
+					verifier: "twitter-dap-verifier",
+					typeOfLogin: "twitter",
+					clientId: AUTH0_CLIENT_ID,
+				},
 			},
 		},
-	},
-});
+	});
 
-web3auth.configureAdapter(openloginAdapter);
+	web3auth.configureAdapter(openloginAdapter);
 
-const torusPlugin = new TorusWalletConnectorPlugin({
-	torusWalletOpts: {},
+	// Connecting to Metamask
+	const metamaskAdapter = new MetamaskAdapter({
+		clientId,
+		sessionTime: 3600, // 1 hour in seconds
+		web3AuthNetwork: WEB3AUTH_NETWORK.TESTNET,
+		chainConfig: chainConfig,
+	});
 
-	walletInitOptions: {
-		whiteLabel: {
-			theme: { isDark: true, colors: { primary: "#00a8ff" } },
+	web3auth.configureAdapter(metamaskAdapter);
 
-			logoDark: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+	web3auth.init();
+};
 
-			logoLight: "https://cryptologos.cc/logos/ethereum-eth-logo.png",
-		},
-
-		useWalletConnect: true,
-
-		enableLogging: true,
-	},
-});
-
-await web3auth.addPlugin(torusPlugin);
-
-web3auth.init();
+export default web3auth;
