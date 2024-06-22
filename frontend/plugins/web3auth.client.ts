@@ -65,7 +65,6 @@ const web3auth = async function () {
 		clientId,
 		sessionTime: 3600, // 1 hour in seconds
 		web3AuthNetwork: WEB3AUTH_NETWORK.TESTNET,
-		chainConfig: chainConfig,
 	});
 
 	web3auth.configureAdapter(metamaskAdapter);
