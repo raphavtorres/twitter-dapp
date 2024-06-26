@@ -14,8 +14,10 @@
     "@web3auth/metamask-adapter": "^8.6.2",
     "@web3auth/modal": "^8.6.2",
     "@web3auth/openlogin-adapter": "^8.6.2",
+    "alchemy-sdk": "^3.3.1",
     "nuxt": "^3.12.2",
     "vue": "^3.4.29",
-    "vue-router": "^4.3.3"
+    "vue-router": "^4.3.3",
+    "web3": "^4.10.0"
   }
 }
