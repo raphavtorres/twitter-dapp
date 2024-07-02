@@ -11,6 +11,9 @@ const SEPOLIA_BLOCK_EXPLORER = process.env.SEPOLIA_BLOCK_EXPLORER;
 const WEB3AUTH_CLIENT_ID = process.env.WEB3AUTH_CLIENT_ID;
 const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID;
 
+// EXAMPLE Modal: https://web3auth.io/docs/quick-start?product=PNP&sdk=PNP_MODAL&framework=REACT&stepIndex=4
+// EXAMPLE AUTH0 NoModal: https://web3auth.io/docs/guides/auth0
+
 const web3auth = async function () {
 	// Instantiating the Web3Auth SDK
 	const chainConfig: CustomChainConfig = {
@@ -39,7 +42,8 @@ const web3auth = async function () {
 	// Initializing the Openlogin Adapter
 	const openloginAdapter = new OpenloginAdapter({
 		adapterSettings: {
-			clientId: WEB3AUTH_CLIENT_ID,
+			clientId: clientId,
+			network: "testnet",
 			uxMode: "popup",
 			whiteLabel: {
 				appName: "Twitter DApp",
@@ -50,6 +54,7 @@ const web3auth = async function () {
 			},
 			loginConfig: {
 				jwt: {
+					name: "Custom Auth Login",
 					verifier: "twitter-dap-verifier",
 					typeOfLogin: "twitter",
 					clientId: AUTH0_CLIENT_ID,
