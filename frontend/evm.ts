@@ -1,9 +1,9 @@
+import web3, { Web3 } from "web3";
 import type { SafeEventEmitterProvider } from "@web3auth/base";
-
-// import { Web3 } from "web3";
-const { Web3 } = require("web3");
+import { Network, Alchemy, Contract } from "alchemy-sdk";
 
 import { ALCHEMY_KEY, CONTRACT_ADDRESS } from "./constants.js";
+import contractABI from "./contract-abi.json";
 
 export default class EthereumRpc {
 	private provider: SafeEventEmitterProvider;
@@ -22,15 +22,16 @@ export default class EthereumRpc {
 		}
 	}
 
-  async getAllTweets(): Promise<any[]> {
-    try {
-      const alchemyKey = ALCHEMY_KEY;
-      // const web3 = create
-      const contractABI = require('./contract-abi.json');
-      const contractAddress = CONTRACT_ADDRESS;
-      const contract = new web3.eth.contract()
+	async getAllTweets(): Promise<any[]> {
+		const contractAddress = CONTRACT_ADDRESS;
 
-      return await contract.methods.getAllTweets().call()
-    }
-  }
+		try {
+			// const alchemyKey = ALCHEMY_KEY;
+			const helloWordContract = new Contract(CONTRACT_ADDRESS, contractABI);
+
+			return await helloWordContract.addComment().call();
+		} catch (error) {
+			return [];
+		}
+	}
 }
