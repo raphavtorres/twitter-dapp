@@ -19,5 +19,8 @@
     "vue": "^3.4.29",
     "vue-router": "^4.3.3",
     "web3": "^4.10.0"
+  },
+  "devDependencies": {
+    "@types/web3": "^1.2.2"
   }
 }
