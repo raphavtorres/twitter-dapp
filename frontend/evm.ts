@@ -1,11 +1,11 @@
-import web3, { Web3 } from "web3";
+import { Web3 } from "web3";
 import type { SafeEventEmitterProvider } from "@web3auth/base";
-import { Network, Alchemy, Contract } from "alchemy-sdk";
+import { Contract } from "alchemy-sdk";
 
-import { ALCHEMY_KEY, CONTRACT_ADDRESS } from "./constants.js";
+import { CONTRACT_ADDRESS } from "./constants.js";
 import contractABI from "./contract-abi.json";
 
-export default class EthereumRpc {
+class EthereumRpc {
 	private provider: SafeEventEmitterProvider;
 
 	constructor(provider: SafeEventEmitterProvider) {
@@ -26,12 +26,17 @@ export default class EthereumRpc {
 		const contractAddress = CONTRACT_ADDRESS;
 
 		try {
-			// const alchemyKey = ALCHEMY_KEY;
+			console.log("DEU CERTO1");
 			const helloWordContract = new Contract(CONTRACT_ADDRESS, contractABI);
 
-			return await helloWordContract.addComment().call();
+			console.log("DEU CERTO2");
+			return await helloWordContract.functions.getAllTweets();
+			// return await helloWordContract.addComment().call();
 		} catch (error) {
+			console.log("DEU ERRO", error);
 			return [];
 		}
 	}
 }
+
+export default EthereumRpc;

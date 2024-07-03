@@ -2,4 +2,7 @@
 export default defineNuxtConfig({
 	devtools: { enabled: true },
 	plugins: ["~/plugins/web3auth.client.ts"],
+	build: {
+		transpile: ["alchemy-sdk"],
+	},
 });

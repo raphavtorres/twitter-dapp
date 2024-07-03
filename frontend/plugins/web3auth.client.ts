@@ -4,17 +4,22 @@ import type { CustomChainConfig } from "@web3auth/base/dist/types/chain/IChainIn
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { OpenloginAdapter, THEME_MODES } from "@web3auth/openlogin-adapter";
 import { MetamaskAdapter } from "@web3auth/metamask-adapter";
+import {
+	SEPOLIA_RPC_TARGET,
+	SEPOLIA_CHAIN_ID,
+	SEPOLIA_BLOCK_EXPLORER,
+	WEB3AUTH_CLIENT_ID,
+	AUTH0_CLIENT_ID,
+} from "~/constants";
 
-const SEPOLIA_RPC_TARGET = process.env.SEPOLIA_RPC_TARGET;
-const SEPOLIA_CHAIN_ID = process.env.SEPOLIA_CHAIN_ID;
-const SEPOLIA_BLOCK_EXPLORER = process.env.SEPOLIA_BLOCK_EXPLORER;
-const WEB3AUTH_CLIENT_ID = process.env.WEB3AUTH_CLIENT_ID;
-const AUTH0_CLIENT_ID = process.env.AUTH0_CLIENT_ID;
+import type { Plugin } from "@nuxt/types";
 
 // EXAMPLE Modal: https://web3auth.io/docs/quick-start?product=PNP&sdk=PNP_MODAL&framework=REACT&stepIndex=4
 // EXAMPLE AUTH0 NoModal: https://web3auth.io/docs/guides/auth0
 
-const web3auth = async function () {
+// const defineNuxtPlugin: Plugin = ({ app }, inject) => {
+export default defineNuxtPlugin((nuxtApp) => {
+	// const web3auth = async function () {
 	// Instantiating the Web3Auth SDK
 	const chainConfig: CustomChainConfig = {
 		chainNamespace: CHAIN_NAMESPACES.EIP155,
@@ -75,6 +80,13 @@ const web3auth = async function () {
 	web3auth.configureAdapter(metamaskAdapter);
 
 	web3auth.init();
-};
+	console.log("rodou o web3auth");
 
-export default web3auth;
+	// inject("web3auth", web3auth);
+	return {
+		provide: {
+			web3auth,
+		},
+	};
+	// };
+});

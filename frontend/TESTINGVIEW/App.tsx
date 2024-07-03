@@ -99,11 +99,11 @@ function App() {
 							jwt: {
 								name: "Custom Auth Login",
 
-								verifier: APP_CONSTANTS.ADAPTER_TWITTER_CLIENT_VERIFIER, // Please create a verifier on the developer dashboard and pass the name here
+								verifier: APP_CONSTANTS.AUTH0_CLIENT_VERIFIER, // Please create a verifier on the developer dashboard and pass the name here
 
 								typeOfLogin: "twitter", // Pass on the login provider of the verifier you've created
 
-								clientId: APP_CONSTANTS.ADAPTER_TWITTER_CLIENT_ID, // Pass on the clientId of the login provider here - Please note this differs from the Web3Auth ClientID. This is the JWT Client ID
+								clientId: APP_CONSTANTS.AUTH0_CLIENT_ID, // Pass on the clientId of the login provider here - Please note this differs from the Web3Auth ClientID. This is the JWT Client ID
 							},
 
 							// Add other login providers here

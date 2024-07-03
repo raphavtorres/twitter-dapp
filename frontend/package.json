@@ -21,6 +21,8 @@
     "web3": "^4.10.0"
   },
   "devDependencies": {
-    "@types/web3": "^1.2.2"
+    "@nuxt/types": "^2.18.1",
+    "@types/web3": "^1.2.2",
+    "typescript": "^5.5.3"
   }
 }
